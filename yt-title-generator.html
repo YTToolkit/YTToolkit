@@ -168,18 +168,19 @@ topic = topic.charAt(0).toUpperCase() + topic.slice(1);
       return;
     }
 
-   let patterns = [
-  topic => `How to ${topic} (Step-by-Step)`,
-  topic => `How to ${topic} Like a Pro`,
-  topic => `${topic}: Beginner to Advanced Guide`,
-  topic => `I Tried ${topic} for 7 Days (Here’s What Happened)`,
-  topic => `Nobody Talks About This ${topic} Mistake`,
-  topic => `${topic} in 10 Minutes (Beginner Friendly)`,
-  topic => `Why Most People Fail at ${topic}`,
-  topic => `${topic} Explained Simply`,
-  topic => `${topic}: Do This, Not That`,
-  topic => `The Smart Way to ${topic}`
-];
+   // pick patterns based on selected tone
+const selectedPatterns = patterns[tone];
+
+if (!selectedPatterns) {
+  results.innerHTML = "<p>No patterns found.</p>";
+  return;
+}
+
+// shuffle patterns
+const shuffled = selectedPatterns.sort(() => 0.5 - Math.random());
+
+// generate titles
+let titles = shuffled.slice(0, 5).map(fn => fn(topic));
 
 // shuffle so results feel human
 patterns = patterns.sort(() => 0.5 - Math.random());
