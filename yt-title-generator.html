@@ -106,12 +106,12 @@
   <script>
  const TITLE_PATTERNS = {
   howto: [
-    topic => `How to ${topic} (Step-by-Step Tutorial)`,
-    topic => `How to ${topic} the Right Way`,
-    topic => `Learn How to ${topic} from Scratch`,
-    topic => `How to ${topic} Without Getting Confused`,
-    topic => `How to ${topic}: Beginner-Friendly Guide`
-  ],
+  topic => `How to Do ${topic} (Step-by-Step)`,
+  topic => `How to Master ${topic} (Beginner Guide)`,
+  topic => `How to Get Started with ${topic}`,
+  topic => `How to Improve at ${topic} Fast`,
+  topic => `The Right Way to Learn ${topic}`
+],
 
   authority: [
     topic => `${topic}: The Complete Beginner’s Guide`,
@@ -140,20 +140,11 @@
   ]
 };
 function normalizeTopic(topic) {
-  // if topic already starts with a verb, keep it
-  if (/^(solve|learn|make|build|grow|edit|create|fix|improve|increase|start|use)\b/i.test(topic)) {
-    return topic;
-  }
+  // remove extra articles
+  topic = topic.replace(/\b(the|a|an)\b/gi, "").trim();
 
-  // common noun-based topics → add smart verbs
-  if (topic.includes("rubik")) return `Solve ${topic}`;
-  if (topic.includes("youtube")) return `Grow on ${topic}`;
-  if (topic.includes("swimming")) return `Swim Better`;
-  if (topic.includes("fitness")) return `Get Fit with ${topic}`;
-  if (topic.includes("coding")) return `Learn ${topic}`;
-
-  // fallback
-  return `Learn ${topic}`;
+  // capitalize properly
+  return topic.charAt(0).toUpperCase() + topic.slice(1);
 }
     
   function generateTitles() {
