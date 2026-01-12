@@ -88,16 +88,16 @@
 
     <input type="text" id="topic" placeholder="Enter your video topic">
 
-    <select id="tone">
-  <option value="How to">How-to</option>
-  <option value="List">List</option>
-  <option value="Curiosity">Curiosity</option>
-  <option value="Beginner">Beginner Friendly</option>
-  <option value="Emotional">Emotional</option>
-  <option value="Viral">Viral / Clickbait</option>
-  <option value="Shorts">YouTube Shorts</option>
-  <option value="Educational">Educational</option>
-  <option value="Comparison">Comparison</option>
+  <select id="tone">
+  <option value="howto">How-to</option>
+  <option value="list">List</option>
+  <option value="curiosity">Curiosity</option>
+  <option value="beginner">Beginner Friendly</option>
+  <option value="emotional">Emotional</option>
+  <option value="viral">Viral / Clickbait</option>
+  <option value="shorts">YouTube Shorts</option>
+  <option value="educational">Educational</option>
+  <option value="comparison">Comparison</option>
 </select>
 
     <button onclick="generateTitles()">Generate Titles</button>
@@ -108,56 +108,124 @@
   </div>
 
   <script>
-   if (tone === "Emotional") {
-  titles = [
-    `This ${topic} Changed My Life`,
-    `I Was Struggling Until I Learned ${topic}`,
-    `The Emotional Truth About ${topic}`,
-    `Why ${topic} Is Harder Than You Think`,
-    `My Honest Experience With ${topic}`
-  ];
-}
+  function generateTitles() {
+    const topic = document.getElementById("topic").value.trim();
+    const tone = document.getElementById("tone").value;
+    const results = document.getElementById("results");
 
-if (tone === "Viral / Clickbait") {
-  titles = [
-    `You Won’t Believe This ${topic} Trick`,
-    `${topic} Is Breaking the Internet`,
-    `Everyone Is Talking About ${topic}`,
-    `This ${topic} Hack Went Viral`,
-    `Stop Scrolling If You Want to ${topic}`
-  ];
-}
+    results.innerHTML = "";
 
-if (tone === "Shorts") {
-  titles = [
-    `${topic} in 30 Seconds`,
-    `${topic} Explained FAST`,
-    `Quick ${topic} Tip`,
-    `${topic} Shorts You Must Watch`,
-    `${topic} in One Minute`
-  ];
-}
+    if (!topic) {
+      results.innerHTML = "<p>Please enter a topic.</p>";
+      return;
+    }
 
-if (tone === "Educational") {
-  titles = [
-    `${topic} Explained Clearly`,
-    `Understanding ${topic} Step by Step`,
-    `Learn ${topic} the Smart Way`,
-    `${topic} Full Explanation`,
-    `${topic} Simplified`
-  ];
-}
+    let titles = [];
 
-if (tone === "Comparison") {
-  titles = [
-    `${topic} vs Reality`,
-    `${topic}: What’s Better?`,
-    `${topic} Compared (Honest Review)`,
-    `Is ${topic} Worth It?`,
-    `${topic} Pros and Cons`
-  ];
-}
-  </script>
+    switch (tone) {
+      case "howto":
+        titles = [
+          `How to ${topic} (Step-by-Step)`,
+          `How to ${topic} Like a Pro`,
+          `How to ${topic} Fast`,
+          `How to ${topic} the Right Way`,
+          `How to ${topic} for Beginners`
+        ];
+        break;
+
+      case "list":
+        titles = [
+          `5 Ways to ${topic}`,
+          `7 Mistakes When You ${topic}`,
+          `10 Tips to ${topic}`,
+          `Top Secrets to ${topic}`,
+          `Best Tricks to ${topic}`
+        ];
+        break;
+
+      case "curiosity":
+        titles = [
+          `Nobody Tells You This About ${topic}`,
+          `The Truth About ${topic}`,
+          `Why ${topic} Isn’t What You Think`,
+          `I Tried ${topic} – Here’s What Happened`,
+          `This Changed How I See ${topic}`
+        ];
+        break;
+
+      case "beginner":
+        titles = [
+          `${topic} Explained for Beginners`,
+          `Beginner’s Guide to ${topic}`,
+          `${topic} Made Simple`,
+          `Start ${topic} Today`,
+          `${topic} Basics You Must Know`
+        ];
+        break;
+
+      case "emotional":
+        titles = [
+          `This ${topic} Changed My Life`,
+          `Why ${topic} Was So Hard for Me`,
+          `My Honest Experience With ${topic}`,
+          `I Almost Quit ${topic}`,
+          `The Emotional Side of ${topic}`
+        ];
+        break;
+
+      case "viral":
+        titles = [
+          `You Won’t Believe This ${topic} Trick`,
+          `${topic} Is Going Viral`,
+          `Everyone Is Talking About ${topic}`,
+          `This ${topic} Hack Blew Up`,
+          `Stop Scrolling If You Want to ${topic}`
+        ];
+        break;
+
+      case "shorts":
+        titles = [
+          `${topic} in 30 Seconds`,
+          `Quick ${topic} Tip`,
+          `${topic} Explained FAST`,
+          `${topic} Shorts That Went Viral`,
+          `${topic} in One Minute`
+        ];
+        break;
+
+      case "educational":
+        titles = [
+          `${topic} Explained Clearly`,
+          `Learn ${topic} Step by Step`,
+          `${topic} Full Explanation`,
+          `${topic} Simplified`,
+          `Understanding ${topic}`
+        ];
+        break;
+
+      case "comparison":
+        titles = [
+          `${topic} vs Reality`,
+          `${topic} – Which Is Better?`,
+          `${topic} Compared Honestly`,
+          `Is ${topic} Worth It?`,
+          `${topic} Pros and Cons`
+        ];
+        break;
+    }
+
+    titles.forEach(title => {
+      const div = document.createElement("div");
+      div.className = "title";
+      div.textContent = title;
+      div.onclick = () => {
+        navigator.clipboard.writeText(title);
+        alert("Title copied!");
+      };
+      results.appendChild(div);
+    });
+  }
+</script>
 
 </body>
 </html>
