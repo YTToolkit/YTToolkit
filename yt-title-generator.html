@@ -146,22 +146,36 @@ function normalizeTopic(topic) {
   // capitalize properly
   return topic.charAt(0).toUpperCase() + topic.slice(1);
 }
-    
+function normalizeTopic(topic) {
+  topic = topic
+    .replace(/\?/g, "")
+    .replace(/^how to\s+/i, "")
+    .replace(/\btutorial\b/i, "")
+    .replace(/\bguide\b/i, "")
+    .replace(/\btips\b/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // If topic already starts with a verb, keep it
+  if (/^(grow|learn|build|make|create|start|improve|increase|solve|edit|use)\b/i.test(topic)) {
+    return topic.charAt(0).toUpperCase() + topic.slice(1);
+  }
+
+  // Smart verb injection for noun topics
+  if (topic.includes("rubik")) return `Solve ${topic}`;
+  if (topic.includes("youtube")) return `Grow on ${topic}`;
+  if (topic.includes("swimming")) return `Swim Better`;
+  if (topic.includes("fitness")) return `Get Fit`;
+  if (topic.includes("coding")) return `Learn ${topic}`;
+
+  // Fallback
+  return `Learn ${topic}`;
+}    
   function generateTitles() {
-    let topic = document.getElementById("topic").value.toLowerCase().trim();
+    let rawTopic = document.getElementById("topic").value;
+    let topic = normalizeTopic(rawTopic);
 
 // clean common phrases
-topic = topic
-  .replace(/\?/g, "")
-  .replace(/^how to\s+/i, "")
-  .replace(/\btutorial\b/i, "")
-  .replace(/\bguide\b/i, "")
-  .replace(/\btips\b/i, "")
-  .replace(/\s+/g, " ")
-  .trim();
-
-// capitalize first letter
-    topic = topic.charAt(0).toUpperCase() + topic.slice(1);
     topic = normalizeTopic(topic);
     const tone = document.getElementById("tone").value;
     const results = document.getElementById("results");
