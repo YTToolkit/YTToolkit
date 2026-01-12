@@ -88,16 +88,12 @@
 
     <input type="text" id="topic" placeholder="Enter your video topic">
 
-  <select id="tone">
+<select id="tone">
   <option value="howto">How-to</option>
-  <option value="list">List</option>
+  <option value="authority">Authority</option>
   <option value="curiosity">Curiosity</option>
-  <option value="beginner">Beginner Friendly</option>
-  <option value="emotional">Emotional</option>
-  <option value="viral">Viral / Clickbait</option>
-  <option value="shorts">YouTube Shorts</option>
-  <option value="educational">Educational</option>
-  <option value="comparison">Comparison</option>
+  <option value="speed">Fast / Quick</option>
+  <option value="mistakes">Mistakes</option>
 </select>
 
     <button onclick="generateTitles()">Generate Titles</button>
@@ -169,7 +165,7 @@ topic = topic.charAt(0).toUpperCase() + topic.slice(1);
     }
 
    // pick patterns based on selected tone
-const selectedPatterns = patterns[tone];
+const selectedPatterns = TITLE_PATTERNS[tone];
 
 if (!selectedPatterns) {
   results.innerHTML = "<p>No patterns found.</p>";
@@ -181,12 +177,6 @@ const shuffled = selectedPatterns.sort(() => 0.5 - Math.random());
 
 // generate titles
 let titles = shuffled.slice(0, 5).map(fn => fn(topic));
-
-// shuffle so results feel human
-patterns = patterns.sort(() => 0.5 - Math.random());
-
-// take 5 titles
-let titles = patterns.slice(0, 5).map(fn => fn(topic));
 
     titles.forEach(title => {
       const div = document.createElement("div");
