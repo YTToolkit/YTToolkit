@@ -139,6 +139,23 @@
     topic => `Why You’re Struggling With ${topic}`
   ]
 };
+function normalizeTopic(topic) {
+  // if topic already starts with a verb, keep it
+  if (/^(solve|learn|make|build|grow|edit|create|fix|improve|increase|start|use)\b/i.test(topic)) {
+    return topic;
+  }
+
+  // common noun-based topics → add smart verbs
+  if (topic.includes("rubik")) return `Solve ${topic}`;
+  if (topic.includes("youtube")) return `Grow on ${topic}`;
+  if (topic.includes("swimming")) return `Swim Better`;
+  if (topic.includes("fitness")) return `Get Fit with ${topic}`;
+  if (topic.includes("coding")) return `Learn ${topic}`;
+
+  // fallback
+  return `Learn ${topic}`;
+}
+    
   function generateTitles() {
     let topic = document.getElementById("topic").value.toLowerCase().trim();
 
@@ -153,7 +170,8 @@ topic = topic
   .trim();
 
 // capitalize first letter
-topic = topic.charAt(0).toUpperCase() + topic.slice(1);
+    topic = topic.charAt(0).toUpperCase() + topic.slice(1);
+    topic = normalizeTopic(topic);
     const tone = document.getElementById("tone").value;
     const results = document.getElementById("results");
 
