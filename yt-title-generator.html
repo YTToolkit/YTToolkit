@@ -89,11 +89,16 @@
     <input type="text" id="topic" placeholder="Enter your video topic">
 
     <select id="tone">
-      <option value="How to">How-to</option>
-      <option value="List">List</option>
-      <option value="Curiosity">Curiosity</option>
-      <option value="Beginner">Beginner Friendly</option>
-    </select>
+  <option value="How to">How-to</option>
+  <option value="List">List</option>
+  <option value="Curiosity">Curiosity</option>
+  <option value="Beginner">Beginner Friendly</option>
+  <option value="Emotional">Emotional</option>
+  <option value="Viral">Viral / Clickbait</option>
+  <option value="Shorts">YouTube Shorts</option>
+  <option value="Educational">Educational</option>
+  <option value="Comparison">Comparison</option>
+</select>
 
     <button onclick="generateTitles()">Generate Titles</button>
 
@@ -103,68 +108,55 @@
   </div>
 
   <script>
-    function generateTitles() {
-      const topic = document.getElementById("topic").value.trim();
-      const tone = document.getElementById("tone").value;
-      const results = document.getElementById("results");
+   if (tone === "Emotional") {
+  titles = [
+    `This ${topic} Changed My Life`,
+    `I Was Struggling Until I Learned ${topic}`,
+    `The Emotional Truth About ${topic}`,
+    `Why ${topic} Is Harder Than You Think`,
+    `My Honest Experience With ${topic}`
+  ];
+}
 
-      results.innerHTML = "";
+if (tone === "Viral") {
+  titles = [
+    `You Won’t Believe This ${topic} Trick`,
+    `${topic} Is Breaking the Internet`,
+    `Everyone Is Talking About ${topic}`,
+    `This ${topic} Hack Went Viral`,
+    `Stop Scrolling If You Want to ${topic}`
+  ];
+}
 
-      if (!topic) {
-        results.innerHTML = "<p>Please enter a topic.</p>";
-        return;
-      }
+if (tone === "Shorts") {
+  titles = [
+    `${topic} in 30 Seconds`,
+    `${topic} Explained FAST`,
+    `Quick ${topic} Tip`,
+    `${topic} Shorts You Must Watch`,
+    `${topic} in One Minute`
+  ];
+}
 
-      let titles = [];
+if (tone === "Educational") {
+  titles = [
+    `${topic} Explained Clearly`,
+    `Understanding ${topic} Step by Step`,
+    `Learn ${topic} the Smart Way`,
+    `${topic} Full Explanation`,
+    `${topic} Simplified`
+  ];
+}
 
-      if (tone === "How to") {
-        titles = [
-          `How to ${topic} (Step-by-Step Guide)`,
-          `How to ${topic} Like a Pro`,
-          `How to ${topic} in 10 Minutes`,
-          `How to ${topic} the Right Way`,
-          `How to ${topic} for Beginners`
-        ];
-      }
-
-      if (tone === "List") {
-        titles = [
-          `5 Ways to ${topic}`,
-          `7 Mistakes When You ${topic}`,
-          `10 Tips to ${topic} Faster`,
-          `Top Secrets to ${topic}`,
-          `Best Tricks to ${topic}`
-        ];
-      }
-
-      if (tone === "Curiosity") {
-        titles = [
-          `Nobody Tells You How to ${topic}`,
-          `This Is Why You Can’t ${topic}`,
-          `I Tried to ${topic} – Here’s What Happened`,
-          `The Truth About How to ${topic}`,
-          `Stop Doing This When You ${topic}`
-        ];
-      }
-
-      if (tone === "Beginner") {
-        titles = [
-          `${topic} Explained for Beginners`,
-          `Beginner’s Guide to ${topic}`,
-          `${topic}: Everything You Need to Know`,
-          `Start ${topic} Today (Beginner Friendly)`,
-          `${topic} Made Simple`
-        ];
-      }
-
-      titles.forEach(title => {
-        const div = document.createElement("div");
-        div.className = "title";
-        div.textContent = title;
-        div.onclick = () => navigator.clipboard.writeText(title);
-        results.appendChild(div);
-      });
-    }
+if (tone === "Comparison") {
+  titles = [
+    `${topic} vs Reality`,
+    `${topic}: What’s Better?`,
+    `${topic} Compared (Honest Review)`,
+    `Is ${topic} Worth It?`,
+    `${topic} Pros and Cons`
+  ];
+}
   </script>
 
 </body>
