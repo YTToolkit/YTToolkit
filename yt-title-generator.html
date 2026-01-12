@@ -109,7 +109,20 @@
 
   <script>
   function generateTitles() {
-    const topic = document.getElementById("topic").value.trim();
+    let topic = document.getElementById("topic").value.toLowerCase().trim();
+
+// clean common phrases
+topic = topic
+  .replace(/\?/g, "")
+  .replace(/^how to\s+/i, "")
+  .replace(/\btutorial\b/i, "")
+  .replace(/\bguide\b/i, "")
+  .replace(/\btips\b/i, "")
+  .replace(/\s+/g, " ")
+  .trim();
+
+// capitalize first letter
+topic = topic.charAt(0).toUpperCase() + topic.slice(1);
     const tone = document.getElementById("tone").value;
     const results = document.getElementById("results");
 
@@ -123,15 +136,15 @@
     let titles = [];
 
     switch (tone) {
-      case "howto":
-        titles = [
-          `How to ${topic} (Step-by-Step)`,
-          `How to ${topic} Like a Pro`,
-          `How to ${topic} Fast`,
-          `How to ${topic} the Right Way`,
-          `How to ${topic} for Beginners`
-        ];
-        break;
+   case "howto":
+  titles = [
+    `How to ${topic} (Step-by-Step Tutorial)`,
+    `How to ${topic} Easily for Beginners`,
+    `${topic}: Step-by-Step Guide`,
+    `How to ${topic} the Right Way`,
+    `Learn How to ${topic} in Minutes`
+  ];
+  break;
 
       case "list":
         titles = [
