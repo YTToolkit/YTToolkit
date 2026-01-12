@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Title Generator – YTToolkit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free YouTube Title Generator to create catchy, SEO-friendly titles for your videos.">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #cbd5f5;
+      margin-bottom: 30px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    .results {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .title {
+      background: #1e293b;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .title:hover {
+      background: #334155;
+    }
+
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>YouTube Title Generator</h1>
+    <p>Enter your video topic and choose a style to generate viral YouTube titles.</p>
+
+    <input type="text" id="topic" placeholder="Enter your video topic">
+
+    <select id="tone">
+      <option value="How to">How-to</option>
+      <option value="List">List</option>
+      <option value="Curiosity">Curiosity</option>
+      <option value="Beginner">Beginner Friendly</option>
+    </select>
+
+    <button onclick="generateTitles()">Generate Titles</button>
+
+    <div class="results" id="results"></div>
+
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  <script>
+    function generateTitles() {
+      const topic = document.getElementById("topic").value.trim();
+      const tone = document.getElementById("tone").value;
+      const results = document.getElementById("results");
+
+      results.innerHTML = "";
+
+      if (!topic) {
+        results.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+      }
+
+      let titles = [];
+
+      if (tone === "How to") {
+        titles = [
+          `How to ${topic} (Step-by-Step Guide)`,
+          `How to ${topic} Like a Pro`,
+          `How to ${topic} in 10 Minutes`,
+          `How to ${topic} the Right Way`,
+          `How to ${topic} for Beginners`
+        ];
+      }
+
+      if (tone === "List") {
+        titles = [
+          `5 Ways to ${topic}`,
+          `7 Mistakes When You ${topic}`,
+          `10 Tips to ${topic} Faster`,
+          `Top Secrets to ${topic}`,
+          `Best Tricks to ${topic}`
+        ];
+      }
+
+      if (tone === "Curiosity") {
+        titles = [
+          `Nobody Tells You How to ${topic}`,
+          `This Is Why You Can’t ${topic}`,
+          `I Tried to ${topic} – Here’s What Happened`,
+          `The Truth About How to ${topic}`,
+          `Stop Doing This When You ${topic}`
+        ];
+      }
+
+      if (tone === "Beginner") {
+        titles = [
+          `${topic} Explained for Beginners`,
+          `Beginner’s Guide to ${topic}`,
+          `${topic}: Everything You Need to Know`,
+          `Start ${topic} Today (Beginner Friendly)`,
+          `${topic} Made Simple`
+        ];
+      }
+
+      titles.forEach(title => {
+        const div = document.createElement("div");
+        div.className = "title";
+        div.textContent = title;
+        div.onclick = () => navigator.clipboard.writeText(title);
+        results.appendChild(div);
+      });
+    }
+  </script>
+
+</body>
+</html>
