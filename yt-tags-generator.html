@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Tags Generator – YTToolkit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free YouTube Tags Generator to create relevant tags for your videos." />
+
+  <style>
+    body { font-family: Arial, sans-serif; background:#0f172a; color:#e5e7eb; margin:0; padding:0; }
+    .container { max-width: 750px; margin: 60px auto; padding: 20px; text-align:center; }
+    h1 { font-size: 32px; margin-bottom: 10px; }
+    p { color:#cbd5f5; margin-bottom: 30px; }
+    input, select { width:100%; padding:12px; margin-bottom:15px; border-radius:6px; border:none; font-size:16px; }
+    button { background:#3b82f6; color:#fff; border:none; padding:14px 28px; font-size:16px; border-radius:6px; cursor:pointer; }
+    button:hover { background:#2563eb; }
+    .results { margin-top: 25px; text-align:left; }
+    .box { background:#1e293b; padding:14px; border-radius:10px; }
+    .tag { display:inline-block; background:#334155; padding:8px 10px; border-radius:999px; margin:6px 6px 0 0; cursor:pointer; }
+    .tag:hover { background:#475569; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top: 12px; }
+    .small { font-size: 13px; color:#94a3b8; margin-top:10px; }
+    a { color:#60a5fa; text-decoration:none; display:inline-block; margin-top: 30px; }
+    .copyBtn { background:#22c55e; }
+    .copyBtn:hover { background:#16a34a; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>YouTube Tags Generator</h1>
+    <p>Enter your video topic and generate relevant tags. Click a tag to copy it.</p>
+
+    <input id="topic" type="text" placeholder="Example: how to grow on youtube / rubik's cube tutorial" />
+
+    <select id="mode">
+      <option value="balanced">Balanced (Recommended)</option>
+      <option value="seo">More SEO / Long-tail</option>
+      <option value="viral">More Viral / Trendy</option>
+    </select>
+
+    <select id="count">
+      <option value="15">15 tags</option>
+      <option value="25" selected>25 tags</option>
+      <option value="30">30 tags</option>
+    </select>
+
+    <button onclick="generateTags()">Generate Tags</button>
+
+    <div class="row" style="margin-top:14px;">
+      <button class="copyBtn" onclick="copyAll()">Copy All Tags</button>
+    </div>
+
+    <div class="results" id="results"></div>
+
+    <div class="small">Tip: You can paste the copied tags into YouTube “Tags” (if available) or use them as keywords for descriptions.</div>
+
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  <script>
+    function cleanTopic(raw) {
+      return raw
+        .toLowerCase()
+        .replace(/\?/g, "")
+        .replace(/^how to\s+/i, "")
+        .replace(/\btutorial\b/g, "")
+        .replace(/\bguide\b/g, "")
+        .replace(/\btips\b/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function uniq(arr) {
+      return [...new Set(arr.map(x => x.trim()).filter(Boolean))];
+    }
+
+    function titleCase(s) {
+      return s.replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function generateBuckets(topic, mode) {
+      const t = topic;
+
+      const core = [
+        t,
+        `${t} tutorial`,
+        `${t} guide`,
+        `${t} tips`,
+        `${t} for beginners`,
+        `${t} step by step`,
+        `learn ${t}`,
+        `how to ${t}`
+      ];
+
+      const howto = [
+        `how to ${t}`,
+        `${t} explained`,
+        `${t} basics`,
+        `${t} step by step`,
+        `${t} beginner tutorial`,
+        `${t} easy`,
+        `${t} fast`
+      ];
+
+      const outcome = [
+        `${t} without mistakes`,
+        `${t} common mistakes`,
+        `${t} pro tips`,
+        `${t} like a pro`,
+        `${t} best method`,
+        `${t} quick tips`
+      ];
+
+      const platform = [];
+      if (t.includes("youtube")) {
+        platform.push(
+          "youtube growth",
+          "youtube tips",
+          "youtube algorithm",
+          "youtube shorts",
+          "get views on youtube",
+          "increase subscribers",
+          "youtube seo"
+        );
+      }
+
+      const viral = [
+        `${t} hack`,
+        `${t} secrets`,
+        `${t} trending`,
+        `${t} challenge`,
+        `${t} 2026`
+      ];
+
+      let all = [...core, ...howto, ...outcome, ...platform];
+
+      if (mode === "seo") all = [...all, ...core, ...howto];
+      if (mode === "viral") all = [...all, ...viral];
+
+      // cleanup + dedupe
+      all = uniq(all)
+        .map(x => x.replace(/\s+/g, " ").trim())
+        .filter(x => x.length >= 3);
+
+      return all;
+    }
+
+    function generateTags() {
+      const raw = document.getElementById("topic").value;
+      const mode = document.getElementById("mode").value;
+      const count = parseInt(document.getElementById("count").value, 10);
+      const results = document.getElementById("results");
+
+      results.innerHTML = "";
+
+      const topic = cleanTopic(raw);
+      if (!topic) {
+        results.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+      }
+
+      let tags = generateBuckets(topic, mode);
+
+      // small extra: add a couple of short variants if topic has multiple words
+      const words = topic.split(" ").filter(Boolean);
+      if (words.length >= 2) {
+        tags.push(words.slice(-2).join(" "));
+        tags.push(words.slice(-1).join(" "));
+      }
+
+      tags = uniq(tags);
+
+      // shuffle for variety
+      tags = tags.sort(() => 0.5 - Math.random()).slice(0, count);
+
+      const box = document.createElement("div");
+      box.className = "box";
+
+      tags.forEach(tag => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = tag;
+        span.onclick = () => {
+          navigator.clipboard.writeText(tag);
+          alert("Tag copied!");
+        };
+        box.appendChild(span);
+      });
+
+      results.appendChild(box);
+
+      // store for copy-all
+      window.__allTags = tags;
+    }
+
+    function copyAll() {
+      const tags = window.__allTags || [];
+      if (!tags.length) {
+        alert("Generate tags first.");
+        return;
+      }
+      navigator.clipboard.writeText(tags.join(", "));
+      alert("All tags copied!");
+    }
+  </script>
+
+</body>
+</html>
