@@ -105,12 +105,12 @@
 
   <script>
  const TITLE_PATTERNS = {
- howto: [
-  topic => `How to ${topic} (Step-by-Step)`,
-  topic => `${topic} the Right Way`,
-  topic => `${topic}: Beginner-Friendly Guide`,
-  topic => `${topic} Without Getting Confused`,
-  topic => `The Best Way to ${topic}`
+howto: [
+  () => `How to ${action} ${subject} (Step-by-Step)`,
+  () => `${action} ${subject} the Right Way`,
+  () => `${action} ${subject} Without Getting Confused`,
+  () => `${action} ${subject}: Beginner-Friendly Guide`,
+  () => `The Best Way to ${action} ${subject}`
 ],
 
   authority: [
@@ -140,13 +140,6 @@
   ]
 };
 function normalizeTopic(topic) {
-  // remove extra articles
-  topic = topic.replace(/\b(the|a|an)\b/gi, "").trim();
-
-  // capitalize properly
-  return topic.charAt(0).toUpperCase() + topic.slice(1);
-}
-function normalizeTopic(topic) {
   topic = topic
     .replace(/\?/g, "")
     .replace(/^how to\s+/i, "")
@@ -170,10 +163,40 @@ function normalizeTopic(topic) {
 
   // Fallback
   return `Learn ${topic}`;
+}
+function splitTopic(topic) {
+  const verbs = [
+    "grow", "solve", "learn", "build", "make",
+    "create", "start", "improve", "increase",
+    "edit", "use", "swim", "train", "code"
+  ];
+
+  for (let verb of verbs) {
+    if (topic.toLowerCase().startsWith(verb + " ")) {
+      return {
+        action: verb.charAt(0).toUpperCase() + verb.slice(1),
+        subject: topic.slice(verb.length).trim()
+      };
+    }
+  }
+
+  // noun-only fallback
+  if (topic.toLowerCase().includes("youtube")) {
+    return { action: "Grow on", subject: "YouTube" };
+  }
+  if (topic.toLowerCase().includes("rubik")) {
+    return { action: "Solve", subject: "Rubik’s Cube" };
+  }
+  if (topic.toLowerCase().includes("swimming")) {
+    return { action: "Swim", subject: "Better" };
+  }
+
+  return { action: "Learn", subject: topic };
 }    
   function generateTitles() {
     let rawTopic = document.getElementById("topic").value;
     let topic = normalizeTopic(rawTopic);
+    const { action, subject } = splitTopic(topic);
 
 // clean common phrases
     topic = normalizeTopic(topic);
