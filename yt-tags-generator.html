@@ -80,72 +80,145 @@
     }
 
     function generateBuckets(topic, mode) {
-      const t = topic;
+  const t = topic;              // already cleaned: "grow on youtube", "rubik's cube", etc.
+  const tTitle = titleCase(t);
 
-      const core = [
-        t,
-        `${t} tutorial`,
-        `${t} guide`,
-        `${t} tips`,
-        `${t} for beginners`,
-        `${t} step by step`,
-        `learn ${t}`,
-        `how to ${t}`
-      ];
+  // Topic categories (helps create relevant related tags)
+  const isYouTube = /youtube|yt\b|channel|subscribers|views|shorts/.test(t);
+  const isRubik = /rubik|cube|3x3|cfop|oll|pll/.test(t);
+  const isFitness = /fitness|workout|gym|weight loss|fat loss|muscle/.test(t);
+  const isSwim = /swim|swimming|freestyle|backstroke|breaststroke/.test(t);
+  const isEditing = /edit|editing|capcut|premiere|after effects|davinci/.test(t);
 
-      const howto = [
-        `how to ${t}`,
-        `${t} explained`,
-        `${t} basics`,
-        `${t} step by step`,
-        `${t} beginner tutorial`,
-        `${t} easy`,
-        `${t} fast`
-      ];
+  // 1) Exact + close-match tags (most important)
+  const core = [
+    t,
+    tTitle,
+    `how to ${t}`,
+    `${t} tutorial`,
+    `${t} for beginners`,
+    `${t} step by step`,
+    `${t} guide`,
+    `${t} tips`,
+    `${t} explained`
+  ];
 
-      const outcome = [
-        `${t} without mistakes`,
-        `${t} common mistakes`,
-        `${t} pro tips`,
-        `${t} like a pro`,
-        `${t} best method`,
-        `${t} quick tips`
-      ];
+  // 2) Long-tail SEO tags (what people actually search)
+  const seo = [
+    `best way to ${t}`,
+    `easy ${t}`,
+    `${t} easy`,
+    `${t} fast`,
+    `learn ${t}`,
+    `${t} beginner tutorial`,
+    `${t} mistakes`,
+    `${t} common mistakes`,
+    `${t} tips and tricks`,
+    `${t} 2026`
+  ];
 
-      const platform = [];
-      if (t.includes("youtube")) {
-        platform.push(
-          "youtube growth",
-          "youtube tips",
-          "youtube algorithm",
-          "youtube shorts",
-          "get views on youtube",
-          "increase subscribers",
-          "youtube seo"
-        );
-      }
+  // 3) Viral-ish tags (still relevant, not random)
+  const viral = [
+    `${t} hack`,
+    `${t} secrets`,
+    `${t} tips you need`,
+    `${t} shortcut`,
+    `${t} challenge`,
+    `stop doing this ${t}`,
+    `most people do ${t} wrong`
+  ];
 
-      const viral = [
-        `${t} hack`,
-        `${t} secrets`,
-        `${t} trending`,
-        `${t} challenge`,
-        `${t} 2026`
-      ];
+  // 4) Related intent tags by category (this is what fixes “generic” results)
+  let related = [];
+  if (isYouTube) {
+    related = [
+      "youtube tips",
+      "youtube growth",
+      "youtube algorithm",
+      "youtube seo",
+      "how to get views on youtube",
+      "how to grow a youtube channel",
+      "how to get subscribers",
+      "increase watch time",
+      "youtube shorts strategy",
+      "content strategy",
+      "youtube monetization",
+      "youtube analytics",
+      "youtube studio",
+      "viral youtube shorts"
+    ];
+  } else if (isRubik) {
+    related = [
+      "rubiks cube",
+      "how to solve rubiks cube",
+      "rubiks cube beginner method",
+      "rubiks cube tutorial",
+      "rubiks cube algorithms",
+      "solve rubiks cube fast",
+      "3x3 cube tutorial",
+      "2 look oll",
+      "2 look pll",
+      "cfop basics"
+    ];
+  } else if (isSwim) {
+    related = [
+      "swimming for beginners",
+      "freestyle technique",
+      "swimming breathing technique",
+      "how to float",
+      "swim faster",
+      "kick technique",
+      "stroke improvement",
+      "learn swimming",
+      "swimming tips"
+    ];
+  } else if (isFitness) {
+    related = [
+      "workout for beginners",
+      "weight loss tips",
+      "fat loss",
+      "home workout",
+      "gym workout",
+      "build muscle",
+      "fitness motivation",
+      "diet tips"
+    ];
+  } else if (isEditing) {
+    related = [
+      "video editing",
+      "capcut tutorial",
+      "premiere pro tutorial",
+      "davinci resolve tutorial",
+      "edit faster",
+      "editing tips",
+      "reels editing",
+      "shorts editing"
+    ];
+  } else {
+    related = [
+      "beginner tutorial",
+      "step by step",
+      "tips and tricks",
+      "common mistakes",
+      "complete guide",
+      "best method",
+      "for beginners"
+    ];
+  }
 
-      let all = [...core, ...howto, ...outcome, ...platform];
+  // Mode controls the mix
+  let all = [];
+  if (mode === "seo") all = [...core, ...seo, ...related];
+  else if (mode === "viral") all = [...core, ...viral, ...related];
+  else all = [...core, ...seo.slice(0, 6), ...related]; // balanced
 
-      if (mode === "seo") all = [...all, ...core, ...howto];
-      if (mode === "viral") all = [...all, ...viral];
+  // cleanup + dedupe
+  all = uniq(all)
+    .map(x => x.replace(/\s+/g, " ").trim())
+    .filter(x => x.length >= 3);
 
-      // cleanup + dedupe
-      all = uniq(all)
-        .map(x => x.replace(/\s+/g, " ").trim())
-        .filter(x => x.length >= 3);
-
-      return all;
-    }
-
+  return all;
+}
     function generateTags() {
       const raw = document.getElementById("topic").value;
       const mode = document.getElementById("mode").value;
