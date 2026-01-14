@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Description Generator – YTToolkit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free YouTube Description Generator to create SEO-friendly video descriptions with chapters, hashtags, and CTA." />
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6125471187006584"
+     crossorigin="anonymous"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; background:#0f172a; color:#e5e7eb; margin:0; padding:0; }
+    .container { max-width: 900px; margin: 60px auto; padding: 20px; text-align:center; }
+    h1 { font-size: 34px; margin-bottom: 10px; }
+    p { color:#cbd5f5; margin-bottom: 22px; }
+
+    input, textarea, select {
+      width:100%;
+      padding:12px;
+      margin-bottom:12px;
+      border-radius:8px;
+      border:none;
+      font-size:16px;
+      box-sizing: border-box;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+
+    .row { display:flex; gap:12px; flex-wrap:wrap; }
+    .col { flex:1; min-width: 240px; }
+
+    button {
+      background:#3b82f6; color:#fff; border:none;
+      padding:14px 26px; font-size:16px; border-radius:8px; cursor:pointer;
+      margin: 6px 6px 0 0;
+    }
+    button:hover { background:#2563eb; }
+    .secondary { background:#22c55e; }
+    .secondary:hover { background:#16a34a; }
+
+    .panel {
+      text-align:left;
+      background:#111c33;
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:14px;
+      padding:18px;
+      margin-top:18px;
+    }
+    .panel h2 { margin: 0 0 8px; font-size: 18px; }
+    .small { font-size: 13px; color:#94a3b8; margin-top:10px; }
+    .output {
+      width:100%;
+      min-height: 220px;
+      background:#0b1224;
+      color:#e5e7eb;
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:12px;
+      padding:14px;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+    }
+    a { color:#60a5fa; text-decoration:none; display:inline-block; margin-top: 18px; }
+    .note { color:#cbd5f5; font-size:14px; }
+    .badge { display:inline-block; padding:6px 10px; border-radius:999px; background:#1e293b; color:#cbd5f5; font-size:12px; margin-bottom:10px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>YouTube Description Generator</h1>
+    <p>Create a clean, SEO-friendly description with CTA, keywords, hashtags, and optional chapters.</p>
+
+    <div class="row">
+      <div class="col">
+        <input id="topic" type="text" placeholder="Video topic (example: how to grow on youtube shorts)" />
+        <input id="audience" type="text" placeholder="Target audience (optional: beginners, creators, students...)" />
+      </div>
+      <div class="col">
+        <select id="style">
+          <option value="balanced" selected>Balanced (Recommended)</option>
+          <option value="seo">SEO-heavy</option>
+          <option value="short">Short & clean</option>
+        </select>
+
+        <select id="cta">
+          <option value="soft" selected>CTA: Soft (subscribe + comment)</option>
+          <option value="strong">CTA: Strong (subscribe + like + share)</option>
+          <option value="none">CTA: None</option>
+        </select>
+      </div>
+    </div>
+
+    <textarea id="keywords" placeholder="Optional keywords (comma separated) e.g. youtube growth, youtube shorts, youtube seo"></textarea>
+
+    <textarea id="notes" placeholder="Optional notes (what your video covers / steps / tools / links you want to mention)"></textarea>
+
+    <div class="row" style="justify-content:center;">
+      <button onclick="generateDescription()">Generate Description</button>
+      <button class="secondary" onclick="copyOutput()">Copy Description</button>
+    </div>
+
+    <div class="panel">
+      <span class="badge">Generated output</span>
+      <div id="output" class="output"></div>
+      <div class="small">Tip: Keep it relevant. Don’t stuff keywords. Clean + useful usually performs best.</div>
+    </div>
+
+    <div class="panel">
+      <h2>How to use</h2>
+      <ul class="note">
+        <li>Enter a topic and (optional) keywords.</li>
+        <li>Add notes if you want the description to mention specific steps or tools.</li>
+        <li>Click Generate, then Copy.</li>
+      </ul>
+    </div>
+
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  <script>
+    function cleanText(s) {
+      return (s || "").trim().replace(/\s+/g, " ");
+    }
+
+    function splitKeywords(raw) {
+      return (raw || "")
+        .split(",")
+        .map(x => x.trim())
+        .filter(Boolean)
+        .slice(0, 12);
+    }
+
+    function makeHashtags(topic, kws) {
+      const base = topic
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .split(" ")
+        .filter(Boolean);
+
+      const candidates = [
+        ...kws.map(k => k.toLowerCase()),
+        topic.toLowerCase(),
+        base.slice(0, 4).join(" ")
+      ];
+
+      const tags = [];
+      candidates.forEach(c => {
+        const t = c
+          .replace(/[^a-z0-9\s]/g, "")
+          .split(" ")
+          .filter(Boolean)
+          .slice(0, 3)
+          .join("");
+        if (t.length >= 3) tags.push("#" + t);
+      });
+
+      // add a couple of safe defaults
+      tags.push("#YouTube");
+      tags.push("#ContentCreator");
+
+      // uniq and max 8
+      return [...new Set(tags)].slice(0, 8).join(" ");
+    }
+
+    function makeChapters(topic) {
+      // Generic chapters that work for most tutorials
+      const t = topic || "the topic";
+      const lines = [
+        "00:00 Intro",
+        "00:20 What you’ll learn",
+        "01:10 Step 1",
+        "02:40 Step 2",
+        "04:10 Step 3",
+        "05:40 Common mistakes",
+        "06:40 Quick recap",
+        "07:10 Final tips",
+      ];
+      return lines.join("\n");
+    }
+
+    function generateDescription() {
+      const topic = cleanText(document.getElementById("topic").value);
+      const audience = cleanText(document.getElementById("audience").value);
+      const style = document.getElementById("style").value;
+      const cta = document.getElementById("cta").value;
+      const keywords = splitKeywords(document.getElementById("keywords").value);
+      const notes = cleanText(document.getElementById("notes").value);
+
+      const out = document.getElementById("output");
+
+      if (!topic) {
+        out.textContent = "Please enter a video topic first.";
+        return;
+      }
+
+      const who = audience ? `This video is made for ${audience}.` : "This video is made for beginners and creators who want clear, practical steps.";
+      const kwLine = keywords.length ? `Keywords: ${keywords.join(", ")}` : "";
+      const hashtags = makeHashtags(topic, keywords);
+
+      const introBalanced =
+`In this video, we cover: ${topic}.
+${who}
+
+✅ What you’ll get:
+- Clear steps you can copy today
+- Simple tips that actually make a difference
+- Mistakes to avoid`;
+
+      const introSEO =
+`Looking for ${topic}? You’re in the right place.
+${who}
+
+In this tutorial, you’ll learn practical steps, examples, and best practices to get better results faster.`;
+
+      const introShort =
+`${topic} — quick, practical, and beginner-friendly.
+${who}`;
+
+      let intro = introBalanced;
+      if (style === "seo") intro = introSEO;
+      if (style === "short") intro = introShort;
+
+      let ctaBlock = "";
+      if (cta === "soft") {
+        ctaBlock =
+`👍 If this helped, subscribe for more tools + tips.
+💬 Comment your topic and I’ll suggest ideas for your next video.`;
+      } else if (cta === "strong") {
+        ctaBlock =
+`✅ Like, subscribe, and share this with a friend who needs it.
+💬 Comment your niche/topic and I’ll reply with suggestions.`;
+      }
+
+      const notesBlock = notes ? `\n📝 Notes / what this video covers:\n- ${notes.replace(/\n+/g, "\n- ")}\n` : "";
+
+      // include chapters only for balanced + seo (optional but useful)
+      const chaptersBlock = (style !== "short")
+        ? `\n⏱️ Chapters:\n${makeChapters(topic)}\n`
+        : "";
+
+      const final =
+`${intro}
+${notesBlock}
+${chaptersBlock}
+${ctaBlock ? "\n" + ctaBlock + "\n" : ""}
+
+${kwLine ? "\n" + kwLine : ""}
+
+${hashtags}`;
+
+      out.textContent = final.trim();
+    }
+
+    function copyOutput() {
+      const text = (document.getElementById("output").textContent || "").trim();
+      if (!text) {
+        alert("Generate a description first.");
+        return;
+      }
+      navigator.clipboard.writeText(text);
+      alert("Description copied!");
+    }
+  </script>
+
+</body>
+</html>
