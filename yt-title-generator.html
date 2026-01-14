@@ -81,6 +81,58 @@
       display: inline-block;
       margin-top: 30px;
     }
+      .content {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    text-align: left;
+  }
+
+  .card {
+    background: #111c33;
+    border: 1px solid #1f2a44;
+    border-radius: 10px;
+    padding: 18px;
+    margin: 14px 0;
+  }
+
+  .card h2 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    color: #e5e7eb;
+  }
+
+  .card h3 {
+    margin: 14px 0 8px;
+    font-size: 18px;
+    color: #e5e7eb;
+  }
+
+  .card ul {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    color: #cbd5f5;
+  }
+
+  .card li {
+    margin: 8px 0;
+  }
+
+  .muted {
+    color: #cbd5f5;
+  }
+
+  footer.site-footer {
+    border-top: 1px solid #1f2a44;
+    padding: 22px 20px;
+    text-align: center;
+    color: #94a3b8;
+  }
+
+  footer.site-footer a {
+    margin: 0 10px;
+    color: #60a5fa;
+  }
   </style>
 </head>
 <body>
@@ -104,6 +156,48 @@
     <div class="results" id="results"></div>
 
     <a href="index.html">← Back to Home</a>
+      <div class="content">
+    <div class="card">
+      <h2>How to use the YouTube Title Generator</h2>
+      <ul>
+        <li>Type your video topic in the box above.</li>
+        <li>Select a style (How-to, Authority, Curiosity, Fast/Quick, Mistakes).</li>
+        <li>Click <strong>Generate Titles</strong> and tap any title to copy it.</li>
+      </ul>
+      <p class="muted">Tip: If your topic is too broad, add a niche or audience (example: “YouTube growth for gaming channels”).</p>
+    </div>
+
+    <div class="card">
+      <h2>Title writing tips (that actually help CTR)</h2>
+      <ul>
+        <li><strong>Be specific:</strong> add numbers, time, or a clear result (example: “in 7 days”).</li>
+        <li><strong>Use a simple promise:</strong> what will the viewer get after watching?</li>
+        <li><strong>Match the thumbnail:</strong> your title and thumbnail must say the same story.</li>
+        <li><strong>Avoid clickbait:</strong> make it curious, but still true.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Examples</h2>
+      <ul>
+        <li><strong>Topic:</strong> “YouTube shorts” → <em>“Grow on YouTube Shorts (Step-by-Step)”</em></li>
+        <li><strong>Topic:</strong> “Rubik’s cube” → <em>“Solve Rubik’s Cube the Right Way”</em></li>
+        <li><strong>Topic:</strong> “video editing” → <em>“Most People Learn Video Editing the Wrong Way”</em></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>FAQ</h2>
+      <h3>Does this tool guarantee viral results?</h3>
+      <p class="muted">No. It generates title ideas. Your video quality, retention, thumbnail, and topic demand still matter.</p>
+
+      <h3>How many titles should I test?</h3>
+      <p class="muted">Pick 3–5 good ones, then choose the clearest title that matches your thumbnail and video.</p>
+
+      <h3>Why do some titles look similar?</h3>
+      <p class="muted">Because styles use patterns. Change your topic wording to get more variety.</p>
+    </div>
+  </div>
   </div>
 
   <script>
@@ -247,4 +341,10 @@ if (tone === "howto") {
 </script>
 
 </body>
+<footer class="site-footer">
+  © 2026 YTToolkit.
+  <a href="privacy-policy.html">Privacy</a>
+  <a href="terms.html">Terms</a>
+  <a href="contact.html">Contact</a>
+</footer>
 </html>
