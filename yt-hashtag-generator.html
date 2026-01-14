@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Hashtag Generator – YTToolkit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free YouTube Hashtag Generator to create relevant hashtags for your videos." />
+
+  <!-- AdSense (keep it consistent like your other pages) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6125471187006584"
+    crossorigin="anonymous"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; background:#0f172a; color:#e5e7eb; margin:0; padding:0; }
+    .container { max-width: 750px; margin: 60px auto; padding: 20px; text-align:center; }
+    h1 { font-size: 34px; margin-bottom: 8px; }
+    p { color:#cbd5f5; margin-bottom: 26px; line-height: 1.6; }
+    input, select { width:100%; padding:12px; margin-bottom:14px; border-radius:8px; border:none; font-size:16px; }
+    button { background:#3b82f6; color:#fff; border:none; padding:14px 26px; font-size:16px; border-radius:8px; cursor:pointer; }
+    button:hover { background:#2563eb; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top: 12px; }
+    .copyBtn { background:#22c55e; }
+    .copyBtn:hover { background:#16a34a; }
+    .results { margin-top: 20px; text-align:left; }
+    .box { background:#111c33; border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:14px; }
+    .tag { display:inline-block; background:#334155; padding:8px 10px; border-radius:999px; margin:8px 8px 0 0; cursor:pointer; }
+    .tag:hover { background:#475569; }
+    .hint { margin-top: 10px; font-size: 13px; color:#94a3b8; }
+    a { color:#60a5fa; text-decoration:none; display:inline-block; margin-top: 26px; }
+    .section {
+      margin-top: 24px;
+      background:#0b142a;
+      border:1px solid rgba(255,255,255,0.08);
+      padding:18px;
+      border-radius:14px;
+      text-align:left;
+    }
+    .section h2 { margin:0 0 10px; font-size: 18px; }
+    .section ul { margin:0; padding-left: 18px; color:#cbd5f5; }
+    .footer { margin-top: 34px; color:#94a3b8; font-size: 13px; }
+    .footer a { margin: 0 8px; }
+    .line { height:1px; background:rgba(255,255,255,0.08); margin: 22px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>YouTube Hashtag Generator</h1>
+    <p>Generate clean, relevant hashtags for YouTube Shorts, Reels, and videos. Click a hashtag to copy it.</p>
+
+    <input id="topic" type="text" placeholder="Example: how to grow on youtube / rubik's cube tutorial / capcut edits" />
+
+    <select id="mode">
+      <option value="balanced" selected>Balanced (Recommended)</option>
+      <option value="seo">More Niche / Specific</option>
+      <option value="viral">More Viral / Trendy</option>
+    </select>
+
+    <select id="count">
+      <option value="10">10 hashtags</option>
+      <option value="15" selected>15 hashtags</option>
+      <option value="20">20 hashtags</option>
+    </select>
+
+    <div class="row">
+      <button onclick="generateHashtags()">Generate Hashtags</button>
+      <button class="copyBtn" onclick="copyAll()">Copy All</button>
+    </div>
+
+    <div class="results" id="results"></div>
+    <div class="hint">Tip: On YouTube, 3–5 hashtags are usually enough. Too many can look spammy.</div>
+
+    <a href="index.html">← Back to Home</a>
+
+    <div class="section">
+      <h2>How to use this tool</h2>
+      <ul>
+        <li>Type your video topic (be specific).</li>
+        <li>Choose a mode (Balanced, Niche, or Viral).</li>
+        <li>Click Generate, then copy the best hashtags.</li>
+        <li>Use 3–5 hashtags in your description (not 20).</li>
+      </ul>
+      <div class="line"></div>
+      <h2>Hashtag tips (avoid mistakes)</h2>
+      <ul>
+        <li>Use relevant hashtags only (random tags can hurt trust).</li>
+        <li>Mix broad + specific (example: #YouTubeTips + #YouTubeShortsStrategy).</li>
+        <li>Avoid banned/unsafe topics and excessive repetition.</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      © 2026 YTToolkit.
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="mailto:media.contact009@gmail.com">Contact</a>
+    </div>
+  </div>
+
+  <script>
+    function cleanTopic(raw) {
+      return (raw || "")
+        .toLowerCase()
+        .replace(/[^\w\s'-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function uniq(arr) {
+      return [...new Set(arr.map(x => x.trim()).filter(Boolean))];
+    }
+
+    function toHashtag(s) {
+      // turn "youtube shorts strategy" -> "#YouTubeShortsStrategy"
+      const words = s
+        .replace(/[-']/g, " ")
+        .split(" ")
+        .filter(Boolean);
+
+      const joined = words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("");
+      return joined ? "#" + joined : "";
+    }
+
+    function makeBuckets(topic, mode) {
+      const t = cleanTopic(topic);
+      const isYouTube = /youtube|yt\b|channel|subscribers|views|shorts/.test(t);
+      const isRubik = /rubik|cube|3x3|cfop|oll|pll/.test(t);
+      const isEditing = /edit|editing|capcut|premiere|after effects|davinci|reels|shorts/.test(t);
+      const isGaming = /gaming|gameplay|fps|minecraft|bgmi|valorant|free fire|cod/.test(t);
+
+      const core = [
+        t,
+        `how to ${t}`,
+        `${t} tutorial`,
+        `${t} for beginners`,
+        `${t} tips`
+      ];
+
+      const niche = [
+        `${t} step by step`,
+        `${t} guide`,
+        `${t} explained`,
+        `${t} strategy`,
+        `${t} mistakes`,
+        `${t} 2026`
+      ];
+
+      const viral = [
+        `${t} hack`,
+        `${t} secrets`,
+        `${t} quick tips`,
+        `learn ${t} fast`,
+        `stop doing this ${t}`
+      ];
+
+      let related = [];
+      if (isYouTube) {
+        related = [
+          "youtube tips",
+          "youtube growth",
+          "youtube algorithm",
+          "youtube shorts",
+          "youtube shorts strategy",
+          "youtube seo",
+          "content strategy",
+          "grow on youtube",
+          "get more views",
+          "get subscribers"
+        ];
+      } else if (isRubik) {
+        related = [
+          "rubiks cube",
+          "solve rubiks cube",
+          "rubiks cube tutorial",
+          "3x3 cube",
+          "cube algorithms",
+          "cfop",
+          "2 look oll",
+          "2 look pll"
+        ];
+      } else if (isEditing) {
+        related = [
+          "video editing",
+          "capcut",
+          "capcut tutorial",
+          "reels editing",
+          "shorts editing",
+          "edit faster",
+          "editing tips"
+        ];
+      } else if (isGaming) {
+        related = [
+          "gaming",
+          "gameplay",
+          "pro tips",
+          "settings",
+          "best sensitivity",
+          "rank push",
+          "highlights"
+        ];
+      } else {
+        related = [
+          "tutorial",
+          "tips",
+          "how to",
+          "beginners",
+          "guide",
+          "explained"
+        ];
+      }
+
+      let all = [];
+      if (mode === "seo") all = [...core, ...niche, ...related];
+      else if (mode === "viral") all = [...core, ...viral, ...related];
+      else all = [...core, ...niche.slice(0, 4), ...related];
+
+      // Convert to hashtags and clean
+      let hashtags = all
+        .map(x => cleanTopic(x))
+        .filter(x => x.length >= 3)
+        .map(x => toHashtag(x))
+        .filter(Boolean);
+
+      // Add a couple short variants
+      const words = t.split(" ").filter(Boolean);
+      if (words.length >= 2) {
+        hashtags.push(toHashtag(words.slice(-2).join(" ")));
+      }
+      if (words.length >= 1) {
+        hashtags.push(toHashtag(words.slice(-1).join(" ")));
+      }
+
+      return uniq(hashtags);
+    }
+
+    function generateHashtags() {
+      const raw = document.getElementById("topic").value;
+      const mode = document.getElementById("mode").value;
+      const count = parseInt(document.getElementById("count").value, 10);
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+
+      const topic = cleanTopic(raw);
+      if (!topic) {
+        results.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+      }
+
+      let hashtags = makeBuckets(topic, mode);
+
+      // Shuffle and take requested count
+      hashtags = hashtags.sort(() => 0.5 - Math.random()).slice(0, count);
+
+      const box = document.createElement("div");
+      box.className = "box";
+
+      hashtags.forEach(tag => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = tag;
+        span.onclick = () => {
+          navigator.clipboard.writeText(tag);
+          alert("Hashtag copied!");
+        };
+        box.appendChild(span);
+      });
+
+      results.appendChild(box);
+      window.__allHashtags = hashtags;
+    }
+
+    function copyAll() {
+      const tags = window.__allHashtags || [];
+      if (!tags.length) {
+        alert("Generate hashtags first.");
+        return;
+      }
+      navigator.clipboard.writeText(tags.join(" "));
+      alert("All hashtags copied!");
+    }
+  </script>
+</body>
+</html>
